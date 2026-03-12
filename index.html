@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VisiVault — DiegosDevStudio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;1,300&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    /* ═══════════════════════════════════════════════════
+       DIEGOSDEVSTUDIO — Official Brand Design System
+       Logo palette: #22D3EE (electric cyan) to #2563EB (royal blue)
+       Background: #121826 deep charcoal/slate
+       Text: #F8FAFC off-white/silver
+    ═══════════════════════════════════════════════════ */
+    :root {
+      --bg:          #121826;
+      --bg-deep:     #0c1120;
+      --surface:     rgba(22, 32, 54, 0.72);
+      --surface-s:   #16203a;
+      --surface2:    rgba(28, 40, 68, 0.55);
+      --border:      rgba(37, 99, 235, 0.28);
+      --border-hi:   rgba(34, 211, 238, 0.22);
+      --border-glow: rgba(34, 211, 238, 0.5);
+      --cyan:        #22D3EE;
+      --royal:       #2563EB;
+      --cyan-faint:  rgba(34, 211, 238, 0.10);
+      --royal-faint: rgba(37,  99, 235, 0.10);
+      --text:        #F8FAFC;
+      --muted:       rgba(248,250,252,0.45);
+      --dim:         rgba(248,250,252,0.22);
+      --success:     #34D399;
+      --error:       #F87171;
+      --warn:        #FBD26A;
+      --r:           10px;
+      --rl:          18px;
+      --rxl:         24px;
+      --fd:          'Rajdhani', sans-serif;
+      --fu:          'Outfit', sans-serif;
+      --fm:          'JetBrains Mono', monospace;
+    }
+
+```
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--fu);
+  font-size: 14px;
+  line-height: 1.65;
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Background Layers ─────────────────────────── */
+#bg {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  /* Subtle grid matching logo's precision aesthetic */
+  background-image:
+    linear-gradient(rgba(34,211,238,0.016) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(34,211,238,0.016) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+#bg::before {
+  content: '';
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 70% 50% at 10% 0%,   rgba(34,211,238,0.06) 0%, transparent 55%),
+    radial-gradient(ellipse 55% 65% at 92% 100%, rgba(37, 99,235,0.07) 0%, transparent 55%),
+    radial-gradient(ellipse 40% 40% at 50% 48%,  rgba(12, 17, 32,0.95) 0%, transparent 100%);
+}
+/* Film grain noise */
+#grain {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0.45;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='250' height='250'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.88' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='250' height='250' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  background-size: 250px 250px;
+}
+
+/* ── App Wrapper ───────────────────────────────── */
+#app { position:relative; z-index:1; max-width:960px; margin:0 auto; padding:0 24px 80px; }
+
+/* ── Header ────────────────────────────────────── */
+header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 28px 0 22px;
+  border-bottom: 1px solid var(--border);
+  position: relative;
+}
+/* Cyan underline accent matching logo gradient */
+header::after {
+  content: '';
+  position: absolute; bottom: -1px; left: 0; width: 200px; height: 1px;
+  background: linear-gradient(90deg, var(--cyan), var(--royal), transparent);
+}
+
+/* Logo */
+.logo { display:flex; align-items:center; gap:14px; }
+.logo-svg { width:46px; height:46px; flex-shrink:0; }
+.logo-text { display:flex; flex-direction:column; gap:1px; line-height:1; }
+.logo-studio {
+  font-family: var(--fm); font-size:9px; letter-spacing:0.22em;
+  text-transform:uppercase; color:var(--muted);
+}
+.logo-name {
+  font-family: var(--fd); font-weight:700; font-size:28px; letter-spacing:0.04em;
+  background: linear-gradient(130deg, var(--cyan) 0%, #5aabf5 45%, var(--royal) 100%);
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+}
+.logo-tag {
+  font-family: var(--fm); font-size:9px; letter-spacing:0.1em;
+  color:var(--dim); -webkit-text-fill-color:var(--dim);
+}
+
+/* Controls */
+.hdr-right { display:flex; align-items:center; gap:10px; }
+
+.toggle {
+  display:flex;
+  background: rgba(10,15,28,0.85);
+  border: 1px solid var(--border);
+  border-radius: 999px; padding:3px;
+  backdrop-filter: blur(10px);
+}
+.tog-btn {
+  font-family:var(--fd); font-weight:600; font-size:13px;
+  letter-spacing:0.1em; text-transform:uppercase;
+  padding:6px 18px; border-radius:999px; border:none; cursor:pointer;
+  background:transparent; color:var(--muted); transition:all 0.24s ease;
+}
+.tog-btn.on {
+  background: linear-gradient(135deg, var(--cyan), var(--royal));
+  color:#fff;
+  box-shadow: 0 2px 14px rgba(34,211,238,0.28);
+}
+
+.gear {
+  width:38px; height:38px; border-radius:50%; cursor:pointer;
+  background: rgba(10,15,28,0.85); border: 1px solid var(--border);
+  color:var(--muted); display:grid; place-items:center;
+  transition:all 0.2s; backdrop-filter:blur(10px);
+}
+.gear:hover { border-color:var(--cyan); color:var(--cyan); box-shadow:0 0 14px rgba(34,211,238,0.18); }
+.gear svg { width:16px; height:16px; }
+
+/* ── Tabs ──────────────────────────────────────── */
+.tabs { display:flex; margin-top:28px; border-bottom:1px solid var(--border); }
+.tab {
+  font-family:var(--fd); font-weight:600; font-size:13px;
+  letter-spacing:0.12em; text-transform:uppercase;
+  padding:12px 26px; border:none; cursor:pointer;
+  background:transparent; color:var(--muted);
+  position:relative; transition:color 0.2s;
+}
+.tab::after {
+  content:''; position:absolute; bottom:-1px; left:0; right:0; height:2px;
+  background: linear-gradient(90deg, var(--cyan), var(--royal));
+  transform:scaleX(0); transform-origin:left;
+  transition:transform 0.32s cubic-bezier(.22,1,.36,1);
+}
+.tab.on { color:var(--text); }
+.tab.on::after { transform:scaleX(1); }
+.tab-dot {
+  display:inline-block; width:5px; height:5px; border-radius:50%;
+  background:linear-gradient(135deg,var(--cyan),var(--royal));
+  margin-right:8px; vertical-align:middle;
+  opacity:0; transform:scale(0); transition:all 0.2s;
+}
+.tab.on .tab-dot { opacity:1; transform:scale(1); }
+
+/* ── Panels ────────────────────────────────────── */
+.panel { display:none; padding-top:32px; animation:fadeUp 0.34s ease; }
+.panel.on { display:block; }
+@keyframes fadeUp { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
+
+/* ── Glassmorphism Card ────────────────────────── */
+.glass {
+  background: var(--surface);
+  backdrop-filter: blur(18px) saturate(1.5);
+  -webkit-backdrop-filter: blur(18px) saturate(1.5);
+  border: 1px solid var(--border);
+  border-radius: var(--rl);
+}
+.glass2 {
+  background: var(--surface2);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid var(--border-hi);
+  border-radius: var(--r);
+}
+
+/* ── Section Label ─────────────────────────────── */
+.lbl {
+  font-family:var(--fm); font-size:10px; font-weight:500;
+  letter-spacing:0.2em; text-transform:uppercase; color:var(--cyan);
+  display:flex; align-items:center; gap:10px; margin-bottom:12px;
+}
+.lbl::before { content:''; display:block; width:14px; height:1px; background:var(--cyan); flex-shrink:0; }
+.lbl::after  { content:''; flex:1; height:1px; background:linear-gradient(90deg,var(--border),transparent); }
+
+/* ── Upload Zone ───────────────────────────────── */
+.upload {
+  border: 1.5px dashed var(--border);
+  border-radius: var(--rl);
+  background: rgba(10,15,28,0.55);
+  min-height: 210px;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:10px; cursor:pointer; position:relative; overflow:hidden;
+  transition:all 0.24s ease;
+}
+.upload:hover, .upload.drag { border-color:var(--cyan); background:rgba(34,211,238,0.04); box-shadow:0 0 28px rgba(34,211,238,0.06) inset; }
+.upload input { position:absolute; inset:0; opacity:0; cursor:pointer; z-index:2; }
+.up-icon {
+  width:56px; height:56px; border-radius:14px;
+  background:var(--cyan-faint); border:1px solid var(--border);
+  display:grid; place-items:center; font-size:22px; transition:all 0.2s;
+}
+.upload:hover .up-icon { border-color:var(--border-hi); background:rgba(34,211,238,0.1); }
+.up-ttl { font-family:var(--fd); font-weight:600; font-size:15px; letter-spacing:.05em; color:var(--muted); }
+.up-sub { font-family:var(--fm); font-size:10px; color:var(--dim); }
+#prevImg { max-width:100%; max-height:280px; border-radius:var(--r); object-fit:contain; display:none; z-index:1; }
+
+/* ── Buttons ───────────────────────────────────── */
+.btn {
+  font-family:var(--fd); font-weight:600; font-size:13px;
+  letter-spacing:0.1em; text-transform:uppercase;
+  padding:11px 26px; border-radius:var(--r); border:none; cursor:pointer;
+  transition:all 0.22s ease; display:inline-flex; align-items:center; gap:8px; white-space:nowrap;
+}
+.btn-g {
+  background: linear-gradient(135deg, var(--cyan) 0%, #4a9ff0 50%, var(--royal) 100%);
+  color:#fff;
+  box-shadow: 0 4px 18px rgba(34,211,238,0.22), 0 1px 0 rgba(255,255,255,0.08) inset;
+}
+.btn-g:hover:not(:disabled) { transform:translateY(-2px); box-shadow:0 8px 28px rgba(34,211,238,0.32); }
+.btn-g:disabled { opacity:.4; cursor:not-allowed; transform:none; }
+.btn-o {
+  background:transparent; border:1px solid var(--border); color:var(--muted);
+}
+.btn-o:hover { border-color:var(--cyan); color:var(--cyan); }
+.btn-gh { background:transparent; color:var(--muted); padding:8px 12px; }
+.btn-gh:hover { color:var(--text); }
+
+/* ── Inputs ────────────────────────────────────── */
+textarea, input[type=text], input[type=password] {
+  width:100%;
+  background:rgba(10,15,28,0.75); border:1px solid var(--border);
+  border-radius:var(--r); color:var(--text);
+  font-family:var(--fm); font-size:12.5px; line-height:1.7;
+  padding:13px 16px; resize:vertical; outline:none;
+  transition:border-color 0.2s, box-shadow 0.2s;
+  backdrop-filter:blur(4px);
+}
+textarea:focus, input:focus { border-color:var(--cyan); box-shadow:0 0 0 3px rgba(34,211,238,0.08); }
+textarea::placeholder, input::placeholder { color:var(--dim); }
+
+/* ── Output ────────────────────────────────────── */
+.out-wrap { position:relative; }
+.out {
+  background:rgba(10,15,28,0.8); border:1px solid var(--border); border-radius:var(--r);
+  padding:16px 46px 16px 16px;
+  font-family:var(--fm); font-size:12.5px; line-height:1.78; color:var(--text);
+  min-height:88px; white-space:pre-wrap; word-break:break-word; transition:border-color 0.2s;
+}
+.out.mt { color:var(--dim); font-style:italic; }
+.out.set { border-color:rgba(34,211,238,0.25); }
+.cpbtn {
+  position:absolute; top:10px; right:10px;
+  background:var(--surface-s); border:1px solid var(--border);
+  color:var(--muted); border-radius:6px; padding:4px 10px;
+  font-family:var(--fm); font-size:10px; letter-spacing:0.1em;
+  cursor:pointer; transition:all 0.18s;
+}
+.cpbtn:hover { border-color:var(--cyan); color:var(--cyan); }
+
+/* ── Pro Panel ─────────────────────────────────── */
+.pro { display:none; margin-top:24px; border-top:1px solid var(--border); padding-top:22px; animation:fadeUp 0.3s ease; }
+.pro.on { display:block; }
+.pro-lbl {
+  font-family:var(--fm); font-size:10px; font-weight:500;
+  letter-spacing:0.2em; text-transform:uppercase; color:var(--royal);
+  display:flex; align-items:center; gap:8px; margin-bottom:12px;
+}
+.pro-lbl::before { content:'⚡'; font-size:12px; }
+
+.chips { display:flex; flex-wrap:wrap; gap:7px; margin-bottom:10px; }
+.chip {
+  font-family:var(--fm); font-size:10px; letter-spacing:0.08em;
+  padding:5px 11px; border-radius:6px;
+  background:var(--royal-faint); border:1px solid rgba(37,99,235,0.22);
+  color:var(--muted); cursor:pointer; transition:all 0.18s; user-select:none;
+}
+.chip:hover { border-color:var(--cyan-faint); color:rgba(34,211,238,.8); }
+.chip.on {
+  background:linear-gradient(135deg,rgba(34,211,238,0.13),rgba(37,99,235,0.13));
+  border-color:var(--cyan); color:var(--cyan);
+  box-shadow:0 0 8px rgba(34,211,238,0.12);
+}
+.pro-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+@media(max-width:580px){ .pro-grid{grid-template-columns:1fr} }
+
+/* ── Loader ────────────────────────────────────── */
+.ld { display:none; align-items:center; gap:10px; margin-top:12px; }
+.ld.on { display:flex; }
+.spin {
+  width:16px; height:16px; border-radius:50%;
+  border:2px solid rgba(34,211,238,.15); border-top-color:var(--cyan);
+  animation:rot .65s linear infinite;
+}
+@keyframes rot { to{transform:rotate(360deg)} }
+.ld-txt { font-family:var(--fm); font-size:11px; color:var(--muted); }
+
+/* ── Status ────────────────────────────────────── */
+.st { font-family:var(--fm); font-size:11px; padding:8px 12px; border-radius:7px; margin-top:8px; }
+.ok  { background:rgba(52,211,153,0.08); color:var(--success); border:1px solid rgba(52,211,153,0.2); }
+.err { background:rgba(248,113,113,0.08); color:var(--error);  border:1px solid rgba(248,113,113,0.2); }
+
+/* ── Scene Cards ───────────────────────────────── */
+.scenes { display:flex; flex-direction:column; gap:12px; margin-top:24px; }
+.sc {
+  display:grid; grid-template-columns:50px 1fr; gap:14px; align-items:start;
+  padding:16px 18px;
+  animation:fadeUp 0.4s ease both;
+}
+.sc:nth-child(2){animation-delay:.06s}
+.sc:nth-child(3){animation-delay:.12s}
+.sc:nth-child(4){animation-delay:.18s}
+.sc:nth-child(5){animation-delay:.24s}
+.sc-num {
+  width:42px; height:42px; border-radius:10px;
+  background:linear-gradient(135deg,var(--cyan),var(--royal));
+  display:grid; place-items:center;
+  font-family:var(--fd); font-weight:700; font-size:16px; color:#fff; flex-shrink:0;
+  box-shadow:0 4px 12px rgba(34,211,238,0.22);
+}
+.sc-lbl { font-family:var(--fm); font-size:10px; letter-spacing:.12em; text-transform:uppercase; color:var(--cyan); margin-bottom:5px; }
+.sc-txt { font-size:13px; color:var(--text); line-height:1.7; }
+
+/* ── Modals ────────────────────────────────────── */
+.modal-bg {
+  position:fixed; inset:0; z-index:200;
+  background:rgba(8,12,22,0.8); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+  display:grid; place-items:center; animation:fi 0.18s ease;
+}
+@keyframes fi { from{opacity:0} to{opacity:1} }
+.modal {
+  background:rgba(18,26,44,0.96); backdrop-filter:blur(28px); -webkit-backdrop-filter:blur(28px);
+  border:1px solid var(--border); border-radius:var(--rxl);
+  padding:36px 40px; max-width:480px; width:92%;
+  box-shadow:0 24px 80px rgba(0,0,0,0.55), 0 0 0 1px rgba(34,211,238,0.05) inset;
+  animation:mi 0.3s cubic-bezier(.22,1,.36,1);
+}
+@keyframes mi { from{opacity:0;transform:translateY(18px) scale(.97)} to{opacity:1;transform:translateY(0) scale(1)} }
+/* Cyan top bar matching logo gradient */
+.modal::before {
+  content:''; display:block; height:2px; width:56px;
+  background:linear-gradient(90deg,var(--cyan),var(--royal)); border-radius:2px; margin-bottom:22px;
+}
+.modal h2 { font-family:var(--fd); font-weight:700; font-size:22px; letter-spacing:.03em; margin-bottom:12px; }
+.modal p { font-size:13px; color:var(--muted); line-height:1.75; margin-bottom:10px; }
+.m-warn {
+  background:rgba(251,210,106,0.07); border:1px solid rgba(251,210,106,0.22);
+  border-radius:var(--r); padding:12px 15px;
+  font-family:var(--fm); font-size:11.5px; color:var(--warn); margin:16px 0; line-height:1.65;
+}
+.m-err {
+  background:rgba(248,113,113,0.07); border:1px solid rgba(248,113,113,0.22);
+  border-radius:var(--r); padding:12px 15px;
+  font-family:var(--fm); font-size:11.5px; color:var(--error); margin:16px 0; line-height:1.65;
+}
+.m-foot { display:flex; gap:10px; margin-top:22px; flex-wrap:wrap; }
+.ilbl {
+  font-family:var(--fm); font-size:10px; letter-spacing:.16em; text-transform:uppercase;
+  color:var(--muted); display:block; margin-bottom:8px;
+}
+
+/* ── Footer ────────────────────────────────────── */
+footer {
+  border-top:1px solid var(--border); margin-top:72px; padding-top:24px;
+  display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;
+}
+.ft-left { display:flex; align-items:center; gap:10px; }
+.ft-logo { width:22px; height:22px; }
+.ft-brand { font-family:var(--fd); font-weight:600; font-size:13px; color:var(--muted); letter-spacing:.05em; }
+.ft-brand strong { color:var(--cyan); font-weight:700; }
+.ft-links { display:flex; gap:20px; }
+.ft-links a { font-family:var(--fm); font-size:10px; letter-spacing:.12em; text-transform:uppercase; color:var(--dim); text-decoration:none; transition:color 0.2s; }
+.ft-links a:hover { color:var(--cyan); }
+
+@media(max-width:640px){
+  header { flex-wrap:wrap; gap:14px; }
+  .logo-name { font-size:22px; }
+  .tab { padding:10px 14px; font-size:11px; }
+  .modal { padding:28px 22px; }
+}
+.flex { display:flex; } .aic { align-items:center; } .g10 { gap:10px; }
+.mt12{margin-top:12px} .mt16{margin-top:16px} .mt20{margin-top:20px}
+.hidden { display:none !important; }
+a { color:var(--cyan); }
+```
+
+  </style>
+</head>
+<body>
+
+<div id="bg" aria-hidden="true"></div>
+<div id="grain" aria-hidden="true"></div>
+
+<!-- ══ CONSENT MODAL ══ -->
+
+<div class="modal-bg" id="mConsent" role="dialog" aria-modal="true" aria-labelledby="ct">
+  <div class="modal">
+    <h2 id="ct">Privacy &amp; Data Consent</h2>
+    <p>VisiVault uses the <strong>Google Gemini API (Free Tier)</strong> to analyze images and generate AI prompts. Please review how your data is handled before continuing.</p>
+    <div class="m-warn">⚠ FREE TIER NOTICE — Images you submit may be used by Google to improve their AI models. Do not upload personally identifiable, confidential, or sensitive imagery.</div>
+    <p>Your API key is stored in your browser's <code>localStorage</code> and is only ever sent to Google's API endpoint directly. DiegosDevStudio does not collect, log, or store your key.</p>
+    <p>By clicking <strong>I Agree</strong> you accept these terms and Google's <a href="https://policies.google.com/privacy" target="_blank">Privacy Policy</a>.</p>
+    <div class="m-foot">
+      <button class="btn btn-g" id="cAgree">I Agree — Let's Build</button>
+      <button class="btn btn-o" id="cDecline">Decline</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SETTINGS MODAL ══ -->
+
+<div class="modal-bg hidden" id="mSettings" role="dialog" aria-modal="true" aria-labelledby="st">
+  <div class="modal">
+    <h2 id="st">API Settings</h2>
+    <div class="m-err">🔑 SECURITY WARNING — Your key is stored as plain text in browser <code>localStorage</code>. Do not use VisiVault on shared or public devices. Clear browser storage after use on untrusted machines. Never share your API key.</div>
+    <label class="ilbl" for="apiKey">Gemini API Key</label>
+    <input type="password" id="apiKey" placeholder="AIzaSy…" autocomplete="off" spellcheck="false"/>
+    <p style="font-family:var(--fm);font-size:10.5px;color:var(--dim);margin-top:8px;">
+      Free key → <a href="https://aistudio.google.com/app/apikey" target="_blank">aistudio.google.com</a>
+    </p>
+    <div class="m-foot">
+      <button class="btn btn-g"  id="saveKey">Save Key</button>
+      <button class="btn btn-o"  id="clearKey">Clear Key</button>
+      <button class="btn btn-gh" id="closeSet">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ APP ══ -->
+
+<div id="app">
+
+  <header>
+    <div class="logo">
+      <!-- SVG recreation of the {D> mark with official cyan→royal gradient -->
+      <svg class="logo-svg" viewBox="0 0 46 46" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="DiegosDevStudio {D> logo">
+        <defs>
+          <linearGradient id="G1" x1="0" y1="0" x2="46" y2="46" gradientUnits="userSpaceOnUse">
+            <stop offset="0%"   stop-color="#22D3EE"/>
+            <stop offset="52%"  stop-color="#4a9ff0"/>
+            <stop offset="100%" stop-color="#2563EB"/>
+          </linearGradient>
+          <linearGradient id="G2" x1="4" y1="8" x2="24" y2="38" gradientUnits="userSpaceOnUse">
+            <stop offset="0%"   stop-color="#22D3EE" stop-opacity=".95"/>
+            <stop offset="100%" stop-color="#2563EB"/>
+          </linearGradient>
+          <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+            <feGaussianBlur stdDeviation="1.5" result="blur"/>
+            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+        <!-- Background circle — matches logo dark slate -->
+        <circle cx="23" cy="23" r="22" fill="#151f36"/>
+        <circle cx="23" cy="23" r="22" fill="url(#G1)" fill-opacity=".07"/>
+        <!-- Subtle inner glow ring -->
+        <circle cx="23" cy="23" r="21.5" stroke="url(#G1)" stroke-width=".5" stroke-opacity=".25"/>
+        <!-- { curly brace — left element of logo -->
+        <path d="M15 10.5
+                 C12.5 10.5 11.5 11.8 11.5 13.8
+                 L11.5 17.5
+                 C11.5 19.5 10.5 20.5 9 21.5
+                 C9 21.8 9 22.2 9 22.5
+                 C10.5 23.5 11.5 24.5 11.5 26.5
+                 L11.5 30.2
+                 C11.5 32.2 12.5 33.5 15 33.5"
+              stroke="url(#G2)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" fill="none" filter="url(#glow)"/>
+        <!-- D outer form -->
+        <path d="M19 11.5
+                 L23 11.5
+                 C30.5 11.5 35 15.8 35 23
+                 C35 30.2 30.5 34.5 23 34.5
+                 L19 34.5
+                 L19 11.5 Z"
+              stroke="url(#G1)" stroke-width="2.4" stroke-linejoin="round" fill="none" filter="url(#glow)"/>
+        <!-- > play arrow — center of logo -->
+        <path d="M21 17.5 L30 23 L21 28.5 Z"
+              fill="url(#G1)" filter="url(#glow)"/>
+      </svg>
+
+```
+  <div class="logo-text">
+    <span class="logo-studio">DiegosDevStudio</span>
+    <span class="logo-name">VisiVault</span>
+    <span class="logo-tag">Prompt Engineering Powerhouse</span>
+  </div>
+</div>
+
+<div class="hdr-right">
+  <div class="toggle" role="group" aria-label="Experience mode">
+    <button class="tog-btn on" id="btnB" onclick="setMode('beginner')">Beginner</button>
+    <button class="tog-btn"    id="btnP" onclick="setMode('pro')">Pro</button>
+  </div>
+  <button class="gear" onclick="openSettings()" aria-label="Settings">
+    <svg viewBox="0 0 20 20" fill="currentColor">
+      <path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd"/>
+    </svg>
+  </button>
+</div>
+```
+
+  </header>
+
+  <nav class="tabs" role="tablist">
+    <button class="tab on" id="tv" role="tab" aria-selected="true"  onclick="switchTab('v')"><span class="tab-dot"></span>Vision</button>
+    <button class="tab"    id="ts" role="tab" aria-selected="false" onclick="switchTab('s')"><span class="tab-dot"></span>Storyboard</button>
+  </nav>
+
+  <!-- ══ VISION TAB ══ -->
+
+  <section class="panel on" id="pv" role="tabpanel">
+
+```
+<div class="lbl">Image Input</div>
+
+<div class="upload glass2" id="upZone"
+     ondragover="dragOn(event)" ondrop="doDrop(event)" ondragleave="dragOff()">
+  <input type="file" id="imgIn" accept="image/*" onchange="onFile(event)"/>
+  <div id="upPH" style="display:flex;flex-direction:column;align-items:center;gap:10px">
+    <div class="up-icon">📸</div>
+    <div class="up-ttl">Drop an image or click to browse</div>
+    <div class="up-sub">JPEG · PNG · WEBP · max 10 MB</div>
+  </div>
+  <img id="prevImg" alt="Preview"/>
+</div>
+
+<div class="flex aic g10 mt16">
+  <button class="btn btn-g" id="aBtn" onclick="doAnalyze()" disabled>
+    <svg width="14" height="14" viewBox="0 0 20 20" fill="currentColor"><path d="M10 2a8 8 0 100 16A8 8 0 0010 2zm0 14a6 6 0 110-12 6 6 0 010 12zm-1-9a1 1 0 012 0v3l2.5 1.5a1 1 0 01-1 1.73L10 11.77V7z"/></svg>
+    Analyze Image
+  </button>
+  <button class="btn btn-o hidden" id="clrBtn" onclick="clearImg()">Clear</button>
+</div>
+
+<div class="ld" id="vLd"><div class="spin"></div><span class="ld-txt">Gemini is reading your image…</span></div>
+<div id="vSt"></div>
+
+<div class="mt20">
+  <div class="lbl">Technical Prompt</div>
+  <div class="out-wrap">
+    <div class="out mt glass2" id="vOut">Your 100-word technical prompt will appear here…</div>
+    <button class="cpbtn hidden" id="cpV" onclick="cp('vOut','cpV')">COPY</button>
+  </div>
+</div>
+
+<!-- PRO — Vision -->
+<div class="pro" id="proV">
+  <div class="pro-lbl">Pro Enhancers</div>
+  <div class="lbl" style="margin-bottom:8px">Technical Enhancers</div>
+  <div class="chips" id="chV"></div>
+  <textarea id="enhV" rows="2" placeholder="8k, raw photo, cinematic, Kodachrome, 35mm…"></textarea>
+  <div class="lbl mt16" style="margin-bottom:8px">Negative Prompts</div>
+  <textarea id="negV" rows="2" placeholder="blurry, watermark, low quality, jpeg artifacts…"></textarea>
+  <div class="flex aic g10 mt16">
+    <button class="btn btn-g" onclick="buildFinal()">⚡ Build Final Prompt</button>
+  </div>
+  <div class="mt12">
+    <div class="lbl" style="margin-bottom:8px">Final Composed Prompt</div>
+    <div class="out-wrap">
+      <div class="out mt glass2" id="vFin">Final prompt will appear here…</div>
+      <button class="cpbtn hidden" id="cpVF" onclick="cp('vFin','cpVF')">COPY</button>
+    </div>
+  </div>
+</div>
+```
+
+  </section>
+
+  <!-- ══ STORYBOARD TAB ══ -->
+
+  <section class="panel" id="ps" role="tabpanel">
+
+```
+<div class="lbl">Video Premise</div>
+<textarea id="premise" rows="4"
+  placeholder="Describe your video concept… e.g. 'A lone astronaut discovers an abandoned greenhouse on Mars, tending to the last living plants as Earth memories surface in slow dissolves.'"></textarea>
+
+<div class="flex aic g10 mt16">
+  <button class="btn btn-g" id="sBtn" onclick="doStory()">
+    <svg width="14" height="14" viewBox="0 0 20 20" fill="currentColor"><path d="M2 6a2 2 0 012-2h12a2 2 0 012 2v2a2 2 0 01-2 2H4a2 2 0 01-2-2V6zm0 6a2 2 0 012-2h12a2 2 0 012 2v2a2 2 0 01-2 2H4a2 2 0 01-2-2v-2z"/></svg>
+    Generate 5 Scenes
+  </button>
+</div>
+
+<div class="ld" id="sLd"><div class="spin"></div><span class="ld-txt">Crafting your 5-scene storyboard…</span></div>
+<div id="sSt"></div>
+<div class="scenes" id="scList"></div>
+
+<!-- PRO — Storyboard -->
+<div class="pro" id="proS">
+  <div class="pro-lbl">Pro Options</div>
+  <div class="pro-grid">
+    <div>
+      <div class="lbl" style="margin-bottom:8px">Style Enhancers</div>
+      <div class="chips" id="chS"></div>
+      <textarea id="enhS" rows="2" placeholder="cinematic, ARRI Alexa, 4K, anamorphic…"></textarea>
+    </div>
+    <div>
+      <div class="lbl" style="margin-bottom:8px">Negative Prompts</div>
+      <textarea id="negS" rows="2" placeholder="shaky cam, stock footage look, poor lighting…"></textarea>
+    </div>
+  </div>
+</div>
+```
+
+  </section>
+
+  <footer>
+    <div class="ft-left">
+      <!-- Inline footer mini-logo -->
+      <svg class="ft-logo" viewBox="0 0 46 46" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <defs>
+          <linearGradient id="FG" x1="0" y1="0" x2="46" y2="46" gradientUnits="userSpaceOnUse">
+            <stop offset="0%"   stop-color="#22D3EE"/>
+            <stop offset="100%" stop-color="#2563EB"/>
+          </linearGradient>
+        </defs>
+        <circle cx="23" cy="23" r="22" fill="#151f36"/>
+        <path d="M15 10.5 C12.5 10.5 11.5 11.8 11.5 13.8 L11.5 17.5 C11.5 19.5 10.5 20.5 9 22.5 C10.5 23.5 11.5 24.5 11.5 26.5 L11.5 30.2 C11.5 32.2 12.5 33.5 15 33.5"
+              stroke="url(#FG)" stroke-width="2.2" stroke-linecap="round" fill="none"/>
+        <path d="M19 11.5 L23 11.5 C30.5 11.5 35 15.8 35 23 C35 30.2 30.5 34.5 23 34.5 L19 34.5 L19 11.5 Z"
+              stroke="url(#FG)" stroke-width="2.2" stroke-linejoin="round" fill="none"/>
+        <path d="M21 17.5 L30 23 L21 28.5 Z" fill="url(#FG)"/>
+      </svg>
+      <div class="ft-brand"><strong>VisiVault</strong> by DiegosDevStudio</div>
+    </div>
+    <div class="ft-links">
+      <a href="LICENSE"        target="_blank">License</a>
+      <a href="CONTRIBUTING.md" target="_blank">Contribute</a>
+      <a href="README.md"      target="_blank">Docs</a>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+/* ════════════════════════════════════════════════
+   VisiVault v2 — DiegosDevStudio Brand Update
+   © 2025 DiegosDevStudio — MIT License
+════════════════════════════════════════════════ */
+
+// ── State ─────────────────────────────────────
+let mode='beginner', b64=null, mime=null;
+
+const CHIPS_V  = ['8k','raw photo','cinematic','Kodachrome','f/1.4','golden hour','film grain','HDR','35mm lens','Fujifilm XT4'];
+const CHIPS_SB = ['cinematic','4K','slow motion','ARRI Alexa','anamorphic','drone shot','handheld','cross-cut','golden hour'];
+
+const g = id => document.getElementById(id);
+const show = id => g(id).classList.remove('hidden');
+const hide = id => g(id).classList.add('hidden');
+
+// ── Boot ──────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  mkChips('chV', 'enhV', CHIPS_V);
+  mkChips('chS', 'enhS', CHIPS_SB);
+  if (localStorage.getItem('vv_c') === '1') hide('mConsent');
+});
+
+// ── Consent ───────────────────────────────────
+g('cAgree').onclick = () => { localStorage.setItem('vv_c','1'); hide('mConsent'); };
+g('cDecline').onclick = () => {
+  g('mConsent').innerHTML = `<div class="modal" style="text-align:center">
+    <div style="font-size:36px;margin-bottom:12px">🚫</div>
+    <div style="font-family:var(--fd);font-size:18px;font-weight:700;margin-bottom:10px">Consent Required</div>
+    <div style="font-size:13px;color:var(--muted)">VisiVault requires your consent to use the Gemini API.<br>Reload the page to try again.</div>
+  </div>`;
+};
+
+// ── Settings ──────────────────────────────────
+function openSettings() {
+  const k = localStorage.getItem('vv_k');
+  if (k) g('apiKey').value = k;
+  show('mSettings');
+}
+g('closeSet').onclick = () => { hide('mSettings'); g('apiKey').value=''; };
+g('mSettings').onclick = e => { if(e.target===g('mSettings')){ hide('mSettings'); g('apiKey').value=''; } };
+g('saveKey').onclick = () => {
+  const k = g('apiKey').value.trim();
+  if(!k){ toast('Enter a valid API key.'); return; }
+  localStorage.setItem('vv_k', k);
+  hide('mSettings'); g('apiKey').value='';
+  toast('✓ API key saved.');
+};
+g('clearKey').onclick = () => {
+  localStorage.removeItem('vv_k');
+  g('apiKey').value='';
+  toast('Key cleared.');
+};
+
+// ── Mode ──────────────────────────────────────
+function setMode(m) {
+  mode=m;
+  g('btnB').classList.toggle('on', m==='beginner');
+  g('btnP').classList.toggle('on', m==='pro');
+  document.querySelectorAll('.pro').forEach(p=>p.classList.toggle('on',m==='pro'));
+}
+
+// ── Tabs ──────────────────────────────────────
+function switchTab(t) {
+  ['v','s'].forEach(id=>{
+    g(`t${id}`).classList.toggle('on',id===t);
+    g(`t${id}`).setAttribute('aria-selected',id===t);
+    g(`p${id}`).classList.toggle('on',id===t);
+  });
+}
+
+// ── Files ─────────────────────────────────────
+function onFile(e)   { loadF(e.target.files[0]); }
+function dragOn(e)   { e.preventDefault(); g('upZone').classList.add('drag'); }
+function dragOff()   { g('upZone').classList.remove('drag'); }
+function doDrop(e)   { e.preventDefault(); dragOff(); const f=e.dataTransfer.files[0]; if(f?.type.startsWith('image/')) loadF(f); }
+
+function loadF(f) {
+  if(!f) return;
+  if(f.size>10*1024*1024){ setSt('vSt','File too large. Max 10 MB.','err'); return; }
+  const r=new FileReader();
+  r.onload=e=>{
+    const s=e.target.result; mime=f.type; b64=s.split(',')[1];
+    const img=g('prevImg'); img.src=s; img.style.display='block';
+    g('upPH').style.display='none';
+    g('aBtn').disabled=false; show('clrBtn');
+  };
+  r.readAsDataURL(f);
+}
+
+function clearImg(){
+  b64=mime=null;
+  const img=g('prevImg'); img.style.display='none'; img.src='';
+  g('upPH').style.display='flex';
+  g('aBtn').disabled=true; hide('clrBtn'); g('imgIn').value='';
+  setOut('vOut','',true); g('vSt').innerHTML='';
+}
+
+// ── Key Guard ─────────────────────────────────
+function getKey(){ const k=localStorage.getItem('vv_k'); if(!k){ openSettings(); throw new Error('Add your Gemini API key in ⚙ Settings.'); } return k; }
+
+// ── Vision ────────────────────────────────────
+async function doAnalyze(){
+  if(!b64) return;
+  let key; try{key=getKey();}catch(e){setSt('vSt',e.message,'err');return;}
+  const btn=g('aBtn'); btn.disabled=true; ldOn('vLd',true); g('vSt').innerHTML='';
+
+  const sys=`You are a master AI prompt engineer for Stable Diffusion, Midjourney, and Sora.
+Analyze the provided image. Output a SINGLE PARAGRAPH of exactly ~100 words as a Technical Prompt covering:
+- Specific lighting setup (golden hour, softbox array, rim lighting, etc.)
+- Camera gear & lens (Fujifilm XT4, Canon 5D Mark IV, 85mm f/1.8, 35mm f/1.4, etc.)
+- Textures & materials (weathered leather, specular concrete, soft bokeh depth, etc.)
+- Composition & framing (rule of thirds, leading lines, shallow depth of field, etc.)
+- Color grading / film stock reference
+Output ONLY the prompt — no labels, no preamble, no bullet points.`;
+
+  try{
+    const res=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`,{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({contents:[{parts:[{inline_data:{mime_type:mime,data:b64}},{text:sys}]}]})
+    });
+    const d=await res.json();
+    if(!res.ok) throw new Error(d.error?.message||`API ${res.status}`);
+    const txt=d.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+    if(!txt) throw new Error('Empty response from Gemini.');
+    setOut('vOut',txt,false); show('cpV'); setSt('vSt','✓ Technical prompt generated.','ok');
+  }catch(e){ setSt('vSt',`Error: ${e.message}`,'err'); }
+  finally{ ldOn('vLd',false); btn.disabled=false; }
+}
+
+function buildFinal(){
+  const base=g('vOut').textContent.trim();
+  if(!base||base.includes('appear here')){ setSt('vSt','Generate a base prompt first.','err'); return; }
+  const enh=g('enhV').value.trim(), neg=g('negV').value.trim();
+  let fin=base;
+  if(enh) fin+=`, ${enh}`;
+  if(neg) fin+=` --no ${neg}`;
+  setOut('vFin',fin,false); show('cpVF');
+}
+
+// ── Storyboard ────────────────────────────────
+async function doStory(){
+  const p=g('premise').value.trim();
+  if(!p){ setSt('sSt','Enter a premise first.','err'); return; }
+  let key; try{key=getKey();}catch(e){setSt('sSt',e.message,'err');return;}
+  const btn=g('sBtn'); btn.disabled=true; ldOn('sLd',true); g('sSt').innerHTML=''; g('scList').innerHTML='';
+
+  const prompt=`You are a professional AI video director for Sora, Runway, and Pika Labs.
+Premise: "${p}"
+
+Generate exactly 5 sequential scene descriptions. Each scene must be camera-direction-ready: include shot type, movement, lighting, and emotional tone. 40–60 words per scene.
+
+Respond ONLY with a valid JSON array, no markdown, no extra text:
+[
+  {"label":"Scene 1: The Hook","desc":"..."},
+  {"label":"Scene 2: The Build","desc":"..."},
+  {"label":"Scene 3: The Turn","desc":"..."},
+  {"label":"Scene 4: The Climax","desc":"..."},
+  {"label":"Scene 5: The Resolution","desc":"..."}
+]`;
+
+  try{
+    const res=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${key}`,{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({contents:[{parts:[{text:prompt}]}]})
+    });
+    const d=await res.json();
+    if(!res.ok) throw new Error(d.error?.message||`API ${res.status}`);
+    const raw=d.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+    if(!raw) throw new Error('Empty response.');
+    const scenes=JSON.parse(raw.replace(/```json|```/g,'').trim());
+    const list=g('scList');
+    scenes.forEach((s,i)=>{
+      const c=document.createElement('div');
+      c.className='sc glass2';
+      c.innerHTML=`<div class="sc-num">${i+1}</div><div><div class="sc-lbl">${esc(s.label)}</div><div class="sc-txt">${esc(s.desc)}</div></div>`;
+      list.appendChild(c);
+    });
+    setSt('sSt','✓ 5 scenes generated.','ok');
+  }catch(e){ setSt('sSt',`Error: ${e.message}`,'err'); }
+  finally{ ldOn('sLd',false); btn.disabled=false; }
+}
+
+// ── Chips ─────────────────────────────────────
+function mkChips(rowId,inputId,list){
+  const row=g(rowId);
+  list.forEach(tag=>{
+    const el=document.createElement('span');
+    el.className='chip'; el.textContent=tag;
+    el.onclick=()=>{ el.classList.toggle('on'); g(inputId).value=[...row.querySelectorAll('.chip.on')].map(c=>c.textContent).join(', '); };
+    row.appendChild(el);
+  });
+}
+
+// ── Utilities ─────────────────────────────────
+function ldOn(id,on){ g(id).classList.toggle('on',on); }
+
+function setOut(id,txt,empty){
+  const el=g(id);
+  if(empty){ el.classList.add('mt'); el.classList.remove('set');
+    el.textContent = id==='vOut'?'Your 100-word technical prompt will appear here…':'Final prompt will appear here…';
+  } else { el.textContent=txt||''; el.classList.remove('mt'); el.classList.add('set'); }
+}
+
+function setSt(id,msg,type){ g(id).innerHTML=`<div class="st ${type}">${esc(msg)}</div>`; }
+
+function cp(outId,btnId){
+  navigator.clipboard.writeText(g(outId).textContent.trim()).then(()=>{
+    const b=g(btnId),pv=b.textContent; b.textContent='COPIED!'; setTimeout(()=>b.textContent=pv,1800);
+  });
+}
+
+function esc(s=''){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+function toast(msg){
+  const el=document.createElement('div');
+  el.style.cssText='position:fixed;bottom:28px;left:50%;transform:translateX(-50%);background:rgba(18,26,44,.96);backdrop-filter:blur(12px);border:1px solid var(--border);color:var(--text);padding:10px 22px;border-radius:10px;font-family:var(--fm);font-size:11px;letter-spacing:.08em;z-index:9999;white-space:nowrap;';
+  el.textContent=msg; document.body.appendChild(el); setTimeout(()=>el.remove(),2400);
+}
+</script>
+
+</body>
+</html>
