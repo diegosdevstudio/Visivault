@@ -821,18 +821,21 @@ function buildFinal(){
 }
 
 // ── Storyboard ────────────────────────────────
-async function doStory(){
-  const p=g('premise').value.trim();
-  if(!p){ setSt('sSt','Enter a premise first.','err'); return; }
-  let key; try{key=getKey();}catch(e){setSt('sSt',e.message,'err');return;}
-  const btn=g('sBtn'); btn.disabled=true; ldOn('sLd',true); g('sSt').innerHTML=''; g('scList').innerHTML='';
+async function doStory() {
+  const p = g('premise').value.trim();
+  if (!p) { setSt('sSt', 'Enter a premise first.', 'err'); return; }
+  let key; try { key = getKey(); } catch (e) { setSt('sSt', e.message, 'err'); return; }
+  
+  const btn = g('sBtn');
+  btn.disabled = true;
+  ldOn('sLd', true);
+  g('sSt').innerHTML = '';
+  g('scList').innerHTML = '';
 
-  const prompt=`You are a professional AI video director for Sora, Runway, and Pika Labs.
+  const prompt = `You are a professional AI video director for Sora, Runway, and Pika Labs.
 Premise: "${p}"
-
 Generate exactly 5 sequential scene descriptions. Each scene must be camera-direction-ready: include shot type, movement, lighting, and emotional tone. 40–60 words per scene.
-
-Respond ONLY with a valid JSON array, no markdown, no extra text:
+Respond ONLY with a valid JSON array, no markdown:
 [
   {"label":"Scene 1: The Hook","desc":"..."},
   {"label":"Scene 2: The Build","desc":"..."},
@@ -841,27 +844,56 @@ Respond ONLY with a valid JSON array, no markdown, no extra text:
   {"label":"Scene 5: The Resolution","desc":"..."}
 ]`;
 
-  try{
-    const res=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${key}`,{
-      method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({contents:[{parts:[{text:prompt}]}]})
-    });
-    const d=await res.json();
-    if(!res.ok) throw new Error(d.error?.message||`API ${res.status}`);
-    const raw=d.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
-    if(!raw) throw new Error('Empty response.');
-    const scenes=JSON.parse(raw.replace(/```json|```/g,'').trim());
-    const list=g('scList');
-    scenes.forEach((s,i)=>{
-      const c=document.createElement('div');
-      c.className='sc glass2';
-      c.innerHTML=`<div class="sc-num">${i+1}</div><div><div class="sc-lbl">${esc(s.label)}</div><div class="sc-txt">${esc(s.desc)}</div></div>`;
-      list.appendChild(c);
-    });
-    setSt('sSt','✓ 5 scenes generated.','ok');
-  }catch(e){ setSt('sSt',`Error: ${e.message}`,'err'); }
-  finally{ ldOn('sLd',false); btn.disabled=false; }
+  let attempts = 0;
+  const maxAttempts = 3;
+
+  while (attempts < maxAttempts) {
+    try {
+      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${key}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+      });
+
+      const d = await res.json();
+
+      if (res.status === 429) {
+        attempts++;
+        setSt('sSt', `Google is busy. Auto-retrying in 6s... (Attempt ${attempts}/${maxAttempts})`, 'warn');
+        await new Promise(r => setTimeout(r, 6000));
+        continue;
+      }
+
+      if (!res.ok) throw new Error(d.error?.message || `API ${res.status}`);
+      
+      const raw = d.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+      if (!raw) throw new Error('Empty response.');
+      
+      // Clean up potential markdown formatting from AI response
+      const cleanJson = raw.replace(/```json|```/g, '').trim();
+      const scenes = JSON.parse(cleanJson);
+      
+      const list = g('scList');
+      scenes.forEach((s, i) => {
+        const c = document.createElement('div');
+        c.className = 'sc glass2';
+        c.innerHTML = `<div class="sc-num">${i + 1}</div><div><div class="sc-lbl">${esc(s.label)}</div><div class="sc-txt">${esc(s.desc)}</div></div>`;
+        list.appendChild(c);
+      });
+      
+      setSt('sSt', '✓ 5 scenes generated.', 'ok');
+      break;
+
+    } catch (e) {
+      setSt('sSt', `Error: ${e.message}`, 'err');
+      break;
+    }
+  }
+
+  ldOn('sLd', false);
+  btn.disabled = false;
 }
+
 
 // ── Chips ─────────────────────────────────────
 function mkChips(rowId,inputId,list){
