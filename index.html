@@ -1,826 +1,128 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>VisiVault — DiegosDevStudio</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&display=swap');
-
-```
-:root {
-  --bg:        #121826;
-  --cyan:      #22D3EE;
-  --blue:      #2563EB;
-  --text:      #F8FAFC;
-  --muted:     #94A3B8;
-  --glass-bg:  rgba(255,255,255,0.04);
-  --glass-border: rgba(37,99,235,0.35);
-  --radius:    14px;
-}
-
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: 'DM Mono', monospace;
-  min-height: 100vh;
-  overflow-x: hidden;
-}
-
-/* ─── Background mesh ─── */
-body::before {
-  content: '';
-  position: fixed; inset: 0; z-index: 0;
-  background:
-    radial-gradient(ellipse 80% 60% at 10% 10%, rgba(34,211,238,0.07) 0%, transparent 60%),
-    radial-gradient(ellipse 60% 80% at 90% 90%, rgba(37,99,235,0.10) 0%, transparent 60%);
-  pointer-events: none;
-}
-
-/* ─── NAV ─── */
-nav {
-  position: sticky; top: 0; z-index: 100;
-  display: flex; align-items: center; gap: 14px;
-  padding: 14px 28px;
-  background: rgba(18,24,38,0.75);
-  backdrop-filter: blur(18px);
-  border-bottom: 1px solid var(--glass-border);
-}
-
-/* D-bracket logo (CSS only) */
-.logo-mark {
-  width: 36px; height: 36px;
-  position: relative; flex-shrink: 0;
-}
-.logo-mark svg { width: 100%; height: 100%; }
-
-.logo-text {
-  font-family: 'Syne', sans-serif;
-  font-weight: 800;
-  font-size: 1.15rem;
-  background: linear-gradient(90deg, var(--cyan), var(--blue));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  letter-spacing: 0.03em;
-}
-.logo-sub {
-  font-size: 0.65rem;
-  color: var(--muted);
-  margin-left: 2px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-}
-nav .spacer { flex: 1; }
-.nav-badge {
-  font-size: 0.65rem;
-  color: var(--cyan);
-  border: 1px solid rgba(34,211,238,0.35);
-  padding: 3px 10px;
-  border-radius: 20px;
-  letter-spacing: 0.1em;
-}
-
-/* ─── MAIN ─── */
-main {
-  position: relative; z-index: 1;
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 48px 24px 80px;
-}
-
-.hero-label {
-  font-size: 0.7rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--cyan);
-  margin-bottom: 12px;
-}
-h1 {
-  font-family: 'Syne', sans-serif;
-  font-size: clamp(2rem, 5vw, 3.2rem);
-  font-weight: 800;
-  line-height: 1.1;
-  margin-bottom: 16px;
-}
-h1 span {
-  background: linear-gradient(100deg, var(--cyan) 0%, var(--blue) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-.hero-desc {
-  color: var(--muted);
-  font-size: 0.88rem;
-  max-width: 520px;
-  line-height: 1.7;
-  margin-bottom: 40px;
-}
-
-/* ─── CARD (Glassmorphism) ─── */
-.card {
-  background: var(--glass-bg);
-  border: 1px solid var(--glass-border);
-  border-radius: var(--radius);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  padding: 28px;
-  margin-bottom: 24px;
-  transition: border-color 0.3s;
-}
-.card:hover { border-color: rgba(34,211,238,0.45); }
-
-.card-title {
-  font-family: 'Syne', sans-serif;
-  font-size: 0.78rem;
-  font-weight: 700;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: var(--cyan);
-  margin-bottom: 18px;
-  display: flex; align-items: center; gap: 8px;
-}
-.card-title::before {
-  content: '';
-  display: inline-block;
-  width: 6px; height: 6px;
-  border-radius: 50%;
-  background: var(--cyan);
-  box-shadow: 0 0 8px var(--cyan);
-}
-
-/* ─── UPLOAD ZONE ─── */
-.upload-zone {
-  border: 2px dashed rgba(37,99,235,0.45);
-  border-radius: var(--radius);
-  padding: 40px 24px;
-  text-align: center;
-  cursor: pointer;
-  transition: all 0.25s;
-  position: relative;
-  background: rgba(37,99,235,0.04);
-}
-.upload-zone:hover, .upload-zone.dragover {
-  border-color: var(--cyan);
-  background: rgba(34,211,238,0.07);
-}
-.upload-zone input[type="file"] {
-  position: absolute; inset: 0;
-  opacity: 0; cursor: pointer; width: 100%; height: 100%;
-}
-.upload-icon {
-  font-size: 2.2rem;
-  margin-bottom: 12px;
-  display: block;
-  opacity: 0.6;
-}
-.upload-zone p { color: var(--muted); font-size: 0.85rem; }
-.upload-zone strong { color: var(--text); }
-
-/* Preview */
-#preview-wrap {
-  display: none;
-  margin-top: 20px;
-  border-radius: var(--radius);
-  overflow: hidden;
-  border: 1px solid var(--glass-border);
-  position: relative;
-}
-#preview-img {
-  width: 100%; max-height: 380px;
-  object-fit: cover; display: block;
-}
-.preview-clear {
-  position: absolute; top: 10px; right: 10px;
-  background: rgba(18,24,38,0.8);
-  border: 1px solid var(--glass-border);
-  color: var(--text);
-  border-radius: 8px;
-  padding: 4px 12px;
-  font-family: 'DM Mono', monospace;
-  font-size: 0.72rem;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-.preview-clear:hover { background: rgba(37,99,235,0.4); }
-
-/* ─── API KEY ─── */
-.input-wrap {
-  position: relative;
-}
-.input-wrap label {
-  display: block;
-  font-size: 0.72rem;
-  color: var(--muted);
-  letter-spacing: 0.08em;
-  margin-bottom: 8px;
-}
-.input-wrap input {
-  width: 100%;
-  background: rgba(255,255,255,0.03);
-  border: 1px solid var(--glass-border);
-  border-radius: 8px;
-  padding: 12px 16px;
-  color: var(--text);
-  font-family: 'DM Mono', monospace;
-  font-size: 0.85rem;
-  outline: none;
-  transition: border-color 0.25s;
-}
-.input-wrap input:focus { border-color: var(--cyan); }
-.input-wrap input::placeholder { color: rgba(148,163,184,0.4); }
-
-/* ─── BUTTON ─── */
-.btn-primary {
-  display: inline-flex; align-items: center; gap: 10px;
-  background: linear-gradient(100deg, var(--cyan) 0%, var(--blue) 100%);
-  color: #fff;
-  font-family: 'Syne', sans-serif;
-  font-weight: 700;
-  font-size: 0.9rem;
-  letter-spacing: 0.05em;
-  padding: 14px 32px;
-  border-radius: 8px;
-  border: none;
-  cursor: pointer;
-  transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
-  box-shadow: 0 0 24px rgba(34,211,238,0.2);
-  width: 100%;
-  justify-content: center;
-  margin-top: 18px;
-}
-.btn-primary:hover:not(:disabled) {
-  opacity: 0.92;
-  transform: translateY(-1px);
-  box-shadow: 0 0 36px rgba(34,211,238,0.35);
-}
-.btn-primary:disabled {
-  opacity: 0.45;
-  cursor: not-allowed;
-  transform: none;
-}
-
-/* ─── STATUS / BUSY BANNER ─── */
-#status-bar {
-  display: none;
-  align-items: center; gap: 12px;
-  padding: 14px 18px;
-  border-radius: var(--radius);
-  margin-bottom: 20px;
-  font-size: 0.82rem;
-}
-#status-bar.busy {
-  background: rgba(239,68,68,0.12);
-  border: 1px solid rgba(239,68,68,0.35);
-  color: #FCA5A5;
-}
-#status-bar.loading {
-  background: rgba(34,211,238,0.08);
-  border: 1px solid rgba(34,211,238,0.3);
-  color: var(--cyan);
-}
-.spinner {
-  width: 16px; height: 16px;
-  border: 2px solid rgba(34,211,238,0.25);
-  border-top-color: var(--cyan);
-  border-radius: 50%;
-  animation: spin 0.7s linear infinite;
-  flex-shrink: 0;
-}
-@keyframes spin { to { transform: rotate(360deg); } }
-
-/* ─── OUTPUT ─── */
-#output-section { display: none; }
-
-.treatment-box {
-  background: rgba(0,0,0,0.25);
-  border: 1px solid rgba(34,211,238,0.2);
-  border-left: 3px solid var(--cyan);
-  border-radius: var(--radius);
-  padding: 24px;
-  font-size: 0.88rem;
-  line-height: 1.8;
-  color: var(--text);
-  white-space: pre-wrap;
-  word-break: break-word;
-}
-
-.output-actions {
-  display: flex; gap: 12px; margin-top: 16px;
-}
-.btn-ghost {
-  flex: 1;
-  background: var(--glass-bg);
-  border: 1px solid var(--glass-border);
-  color: var(--text);
-  font-family: 'DM Mono', monospace;
-  font-size: 0.78rem;
-  padding: 10px 18px;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: border-color 0.2s, background 0.2s;
-  text-align: center;
-  letter-spacing: 0.05em;
-}
-.btn-ghost:hover {
-  border-color: var(--cyan);
-  background: rgba(34,211,238,0.07);
-}
-
-.meta-chips {
-  display: flex; flex-wrap: wrap; gap: 8px;
-  margin-top: 16px;
-}
-.chip {
-  font-size: 0.7rem;
-  padding: 4px 12px;
-  border-radius: 20px;
-  border: 1px solid var(--glass-border);
-  color: var(--muted);
-  letter-spacing: 0.08em;
-  background: rgba(255,255,255,0.03);
-}
-.chip.cyan { border-color: rgba(34,211,238,0.4); color: var(--cyan); }
-
-/* ─── TECHNICAL ENHANCER TAGS ─── */
-.enhancer-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-.tag-btn {
-  background: rgba(255,255,255,0.03);
-  border: 1px solid var(--glass-border);
-  color: var(--muted);
-  font-family: 'DM Mono', monospace;
-  font-size: 0.72rem;
-  letter-spacing: 0.06em;
-  padding: 7px 14px;
-  border-radius: 20px;
-  cursor: pointer;
-  transition: all 0.2s;
-  white-space: nowrap;
-}
-.tag-btn:hover {
-  border-color: var(--cyan);
-  color: var(--cyan);
-  background: rgba(34,211,238,0.08);
-  box-shadow: 0 0 12px rgba(34,211,238,0.15);
-}
-.tag-btn.active {
-  border-color: var(--cyan);
-  color: var(--bg);
-  background: linear-gradient(100deg, var(--cyan), var(--blue));
-  box-shadow: 0 0 16px rgba(34,211,238,0.3);
-}
-.tag-category {
-  font-size: 0.62rem;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: rgba(148,163,184,0.5);
-  width: 100%;
-  margin-top: 6px;
-  margin-bottom: 2px;
-}
-.active-tags-row {
-  margin-top: 14px;
-  min-height: 28px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  align-items: center;
-}
-.active-tag-pill {
-  display: inline-flex; align-items: center; gap: 6px;
-  font-size: 0.68rem;
-  padding: 4px 10px;
-  border-radius: 20px;
-  background: rgba(34,211,238,0.12);
-  border: 1px solid rgba(34,211,238,0.35);
-  color: var(--cyan);
-  letter-spacing: 0.04em;
-}
-.active-tag-pill button {
-  background: none; border: none;
-  color: rgba(34,211,238,0.6);
-  cursor: pointer; font-size: 0.7rem;
-  padding: 0; line-height: 1;
-  transition: color 0.15s;
-}
-.active-tag-pill button:hover { color: var(--cyan); }
-.tags-hint {
-  font-size: 0.7rem;
-  color: rgba(148,163,184,0.4);
-  font-style: italic;
-}
-
-/* ─── FOOTER ─── */
-footer {
-  position: relative; z-index: 1;
-  text-align: center;
-  padding: 24px;
-  color: rgba(148,163,184,0.4);
-  font-size: 0.7rem;
-  letter-spacing: 0.1em;
-  border-top: 1px solid rgba(37,99,235,0.15);
-}
-```
-
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<!-- NAV -->
-
 <nav>
-  <!-- D-bracket logo (CSS/SVG recreation) -->
-  <div class="logo-mark">
-    <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <linearGradient id="lg" x1="0" y1="0" x2="36" y2="36" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stop-color="#22D3EE"/>
-          <stop offset="100%" stop-color="#2563EB"/>
-        </linearGradient>
-      </defs>
-      <!-- { bracket -->
-      <path d="M10 8 C7 8 5 10 5 13 L5 16 C5 17.5 4 18 3 18 C4 18 5 18.5 5 20 L5 23 C5 26 7 28 10 28"
-            stroke="url(#lg)" stroke-width="2.8" stroke-linecap="round" fill="none"/>
-      <!-- D shape -->
-      <path d="M14 10 L14 26 C14 26 24 26 26 18 C28 10 14 10 14 10 Z"
-            stroke="url(#lg)" stroke-width="2.5" stroke-linejoin="round" fill="none"/>
-      <!-- > arrow -->
-      <path d="M17 15 L22 18 L17 21" stroke="url(#lg)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-    </svg>
-  </div>
-
-  <div>
+  <div style="padding-left: 10px;">
     <div class="logo-text">VisiVault</div>
     <div class="logo-sub">DiegosDevStudio</div>
   </div>
-
-  <div class="spacer"></div>
-  <div class="nav-badge">gemini-2.0-flash</div>
+  <div style="flex: 1;"></div>
+  <div style="font-size: 0.65rem; color: var(--cyan); border: 1px solid rgba(34,211,238,0.3); padding: 3px 10px; border-radius: 20px;">gemini-2.0-flash</div>
 </nav>
 
-<!-- MAIN -->
-
 <main>
-  <p class="hero-label">// AI Visual Intelligence</p>
-  <h1>Director's <span>Treatment</span><br>Engine</h1>
-  <p class="hero-desc">
-    Upload an image. The AI generates a dense, cinematic Director's Treatment —
-    technical language for luxury branding, volumetric lighting, and premium visual storytelling.
-  </p>
-
-  <!-- API KEY -->
+  <h1>Director's <span>Treatment</span> Engine</h1>
+  <p style="color:var(--muted); margin-bottom:30px;">Generate high-end technical visual storytelling prompts from any image.</p>
 
   <div class="card">
-    <div class="card-title">API Configuration</div>
-    <div class="input-wrap">
-      <label>GEMINI API KEY</label>
-      <input type="password" id="api-key-input" placeholder="AIza..."/>
-    </div>
+    <label style="font-size:0.7rem; color:var(--muted); display:block; margin-bottom:8px;">GEMINI API KEY</label>
+    <input type="password" id="api-key-input" placeholder="AIza..." style="width:100%; padding:12px; background:rgba(0,0,0,0.3); border:1px solid var(--glass-border); color:white; border-radius:8px;">
   </div>
 
-  <!-- UPLOAD -->
-
   <div class="card">
-    <div class="card-title">Image Source</div>
     <div class="upload-zone" id="drop-zone">
-      <input type="file" id="file-input" accept="image/*"/>
-      <span class="upload-icon">🎞️</span>
+      <input type="file" id="file-input" accept="image/*" style="position:absolute; inset:0; opacity:0; cursor:pointer;">
       <p><strong>Drop a frame</strong> or click to browse</p>
-      <p style="margin-top:6px; font-size:0.75rem;">JPG · PNG · WEBP · up to 10MB</p>
     </div>
-    <div id="preview-wrap">
-      <img id="preview-img" src="" alt="Preview"/>
-      <button class="preview-clear" id="clear-btn">✕ Clear</button>
+    <div id="preview-wrap" style="display:none; margin-top:20px; border:1px solid var(--glass-border); border-radius:14px; overflow:hidden;">
+        <img id="preview-img" src="" style="width:100%; display:block;">
     </div>
   </div>
-
-  <!-- TECHNICAL ENHANCER -->
 
   <div class="card">
-    <div class="card-title">Technical Enhancer</div>
-
-```
-<div class="enhancer-grid">
-  <span class="tag-category">// Vibe</span>
-  <button class="tag-btn" data-tag="Editorial Vogue, luxury fashion editorial aesthetic">Editorial Vogue</button>
-  <button class="tag-btn" data-tag="4k Raw Log, unprocessed cinematic footage with maximum dynamic range">4k Raw Log</button>
-
-  <span class="tag-category">// Film Stock</span>
-  <button class="tag-btn" data-tag="Kodak Portra 400, warm luminous skin tones, fine grain luxury film stock">Portra 400</button>
-
-  <span class="tag-category">// Aperture</span>
-  <button class="tag-btn" data-tag="f/1.2 Master Prime lens, creamy bokeh, razor-sharp subject isolation, expensive optical character">f/1.2 Master Prime</button>
-
-  <span class="tag-category">// Lighting</span>
-  <button class="tag-btn" data-tag="Volumetric Rim Light, atmospheric god rays, sculpted edge definition, deep shadow contrast">Volumetric Rim Light</button>
-  <button class="tag-btn" data-tag="High-Key Fashion lighting, diffused fill, clean highlights, luxury editorial brightness">High-Key Fashion</button>
-
-  <span class="tag-category">// Camera</span>
-  <button class="tag-btn" data-tag="Shot on Arri Alexa 65, the industry gold standard for luxury cinema and high-end commercial production">Arri Alexa 65</button>
-
-  <span class="tag-category">// Lens</span>
-  <button class="tag-btn" data-tag="85mm f/1.2 prime lens, classic luxury fashion portrait compression, flattering subject rendering">85mm f/1.2</button>
-
-  <span class="tag-category">// Texture</span>
-  <button class="tag-btn" data-tag="Micro-Texture Detail, hyper-resolved surface fidelity, tactile material presence, ultra-fine grain structure">Micro-Texture Detail</button>
-
-  <span class="tag-category">// Tone</span>
-  <button class="tag-btn" data-tag="Deep Obsidian Shadows, rich crushed blacks, high-contrast luxury tonal depth, noir-inflected shadow detail">Deep Obsidian Shadows</button>
-</div>
-
-<!-- Active tags display -->
-<div class="active-tags-row" id="active-tags-row">
-  <span class="tags-hint" id="tags-hint">Select enhancers above to append to your treatment prompt.</span>
-</div>
-```
-
+    <p style="font-size:0.7rem; color:var(--cyan); margin-bottom:15px;">TECHNICAL ENHANCERS</p>
+    <div class="enhancer-grid">
+      <button class="tag-btn" data-tag="Arri Alexa 65, cinematic gold standard">Arri Alexa</button>
+      <button class="tag-btn" data-tag="f/1.2 Master Prime lens, razor-sharp bokeh">f/1.2 Prime</button>
+      <button class="tag-btn" data-tag="Volumetric Rim Light, god rays">Volumetric Light</button>
+      <button class="tag-btn" data-tag="Kodak Portra 400 film stock">Portra 400</button>
+    </div>
   </div>
 
-  <!-- STATUS BAR -->
+  <button class="btn-primary" id="analyze-btn" disabled>Forge Treatment</button>
 
-  <div id="status-bar">
-    <div class="spinner" id="status-spinner"></div>
-    <span id="status-text"></span>
-  </div>
-
-  <!-- ANALYZE BUTTON -->
-
-  <button class="btn-primary" id="analyze-btn" disabled>
-    <span>⚡</span> Generate Director's Treatment
-  </button>
-
-  <!-- OUTPUT -->
-
-  <div id="output-section" style="margin-top:32px;">
+  <div id="output-section" style="display:none; margin-top:30px;">
     <div class="card">
-      <div class="card-title">Director's Treatment</div>
-      <div class="treatment-box" id="treatment-output"></div>
-      <div class="meta-chips" id="meta-chips"></div>
-      <div class="output-actions">
-        <button class="btn-ghost" id="copy-btn">⎘ Copy Treatment</button>
-        <button class="btn-ghost" id="reset-btn">↺ New Analysis</button>
-      </div>
+        <div class="treatment-box" id="treatment-output"></div>
+        <button class="btn-primary" style="margin-top:15px; background:var(--glass-bg); border:1px solid var(--glass-border);" onclick="copyText()">Copy Treatment</button>
     </div>
   </div>
 </main>
 
-<footer>© 2025 DiegosDevStudio · VisiVault · Powered by Gemini 2.0 Flash</footer>
-
 <script>
-  // ─── DOM refs ───────────────────────────────────────────────
-  const fileInput     = document.getElementById('file-input');
-  const dropZone      = document.getElementById('drop-zone');
-  const previewWrap   = document.getElementById('preview-wrap');
-  const previewImg    = document.getElementById('preview-img');
-  const clearBtn      = document.getElementById('clear-btn');
-  const analyzeBtn    = document.getElementById('analyze-btn');
-  const apiKeyInput   = document.getElementById('api-key-input');
-  const statusBar     = document.getElementById('status-bar');
-  const statusSpinner = document.getElementById('status-spinner');
-  const statusText    = document.getElementById('status-text');
+  const fileInput = document.getElementById('file-input');
+  const analyzeBtn = document.getElementById('analyze-btn');
+  const previewImg = document.getElementById('preview-img');
+  const previewWrap = document.getElementById('preview-wrap');
   const outputSection = document.getElementById('output-section');
-  const treatmentOut  = document.getElementById('treatment-output');
-  const metaChips     = document.getElementById('meta-chips');
-  const copyBtn       = document.getElementById('copy-btn');
-  const resetBtn      = document.getElementById('reset-btn');
-  const activeTagsRow = document.getElementById('active-tags-row');
-  const tagsHint      = document.getElementById('tags-hint');
+  const treatmentOut = document.getElementById('treatment-output');
 
-  let currentFile = null;
-  let currentB64  = null;
+  let currentB64 = null;
   let currentMime = null;
+  const activeTags = new Set();
 
-  // ─── Active tags state ────────────────────────────────────────
-  const activeTags = new Map(); // label → tag value
-
-  function renderActiveTags() {
-    activeTagsRow.innerHTML = '';
-    if (activeTags.size === 0) {
-      activeTagsRow.innerHTML = '<span class="tags-hint">Select enhancers above to append to your treatment prompt.</span>';
-      return;
-    }
-    activeTags.forEach((val, label) => {
-      const pill = document.createElement('span');
-      pill.className = 'active-tag-pill';
-      pill.innerHTML = `${label} <button title="Remove">✕</button>`;
-      pill.querySelector('button').addEventListener('click', () => {
-        activeTags.delete(label);
-        // deactivate the corresponding tag-btn
-        document.querySelectorAll('.tag-btn').forEach(b => {
-          if (b.textContent.trim() === label) b.classList.remove('active');
-        });
-        renderActiveTags();
-      });
-      activeTagsRow.appendChild(pill);
-    });
-  }
-
-  // ─── Tag button click ─────────────────────────────────────────
+  // Tag Toggling
   document.querySelectorAll('.tag-btn').forEach(btn => {
     btn.addEventListener('click', () => {
-      const label = btn.textContent.trim();
-      const tagVal = btn.dataset.tag;
-      if (activeTags.has(label)) {
-        activeTags.delete(label);
-        btn.classList.remove('active');
-      } else {
-        activeTags.set(label, tagVal);
-        btn.classList.add('active');
-      }
-      renderActiveTags();
+      btn.classList.toggle('active');
+      if(btn.classList.contains('active')) activeTags.add(btn.dataset.tag);
+      else activeTags.delete(btn.dataset.tag);
     });
   });
 
-  // ─── Drag / Drop ─────────────────────────────────────────────
-  dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('dragover'); });
-  dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
-  dropZone.addEventListener('drop', e => {
-    e.preventDefault(); dropZone.classList.remove('dragover');
-    const f = e.dataTransfer.files[0];
-    if (f) handleFile(f);
+  // Handle File
+  fileInput.addEventListener('change', () => {
+    const file = fileInput.files[0];
+    if (file) {
+      currentMime = file.type;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        currentB64 = e.target.result.split(',')[1];
+        previewImg.src = e.target.result;
+        previewWrap.style.display = 'block';
+        analyzeBtn.disabled = false;
+      };
+      reader.readAsDataURL(file);
+    }
   });
-  fileInput.addEventListener('change', () => { if (fileInput.files[0]) handleFile(fileInput.files[0]); });
-  clearBtn.addEventListener('click', clearImage);
 
-  function handleFile(file) {
-    if (!file.type.startsWith('image/')) return alert('Please upload an image file.');
-    currentFile = file;
-    currentMime = file.type;
-    const reader = new FileReader();
-    reader.onload = e => {
-      const dataUrl = e.target.result;
-      currentB64 = dataUrl.split(',')[1];
-      previewImg.src = dataUrl;
-      previewWrap.style.display = 'block';
-      checkReady();
-    };
-    reader.readAsDataURL(file);
-  }
+  // Analyze Function
+  async function generate() {
+    const key = document.getElementById('api-key-input').value;
+    if(!key) return alert("API Key Required");
 
-  function clearImage() {
-    currentFile = null; currentB64 = null; currentMime = null;
-    previewWrap.style.display = 'none';
-    previewImg.src = '';
-    fileInput.value = '';
-    checkReady();
-    outputSection.style.display = 'none';
-  }
-
-  apiKeyInput.addEventListener('input', checkReady);
-
-  function checkReady() {
-    analyzeBtn.disabled = !(currentB64 && apiKeyInput.value.trim().length > 10);
-  }
-
-  // ─── UI helpers ───────────────────────────────────────────────
-  function showStatus(msg, type = 'loading') {
-    statusBar.className = type;
-    statusBar.style.display = 'flex';
-    statusSpinner.style.display = type === 'loading' ? 'block' : 'none';
-    statusText.textContent = msg;
-  }
-  function hideStatus() { statusBar.style.display = 'none'; }
-
-  function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
-
-  // ─── doAnalyze ────────────────────────────────────────────────
-  async function doAnalyze() {
-    const apiKey = apiKeyInput.value.trim();
-    if (!apiKey || !currentB64) return;
-
-    // ── UPGRADED SYSTEM PROMPT (Director's Treatment) ──
-    const activeMods = activeTags.size > 0
-      ? `\n\nMandatory technical modifiers to weave into the treatment:\n${[...activeTags.values()].map(v => `• ${v}`).join('\n')}`
-      : '';
-
-    const sys = `You are a high-end Creative Director specializing in luxury branding and cinematic visual storytelling. Analyze the image provided. Generate a dense, technical "Director's Treatment" (exactly ~100 words) for an image generation engine.
-Include Lighting (volumetric, high-key fashion), Texture (premium materials like brushed gold, marble), Camera (85mm f/1.2, Arri Alexa), and a sophisticated Palette. Provide ONLY the prompt paragraph. No conversational filler.${activeMods}`;
-
-    const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
-
-    const body = {
-      contents: [{
-        parts: [
-          { text: sys },
-          {
-            inline_data: {
-              mime_type: currentMime,
-              data: currentB64
-            }
-          }
-        ]
-      }]
-    };
-
-    // ── Retry loop (max 3 attempts, 429 = Server Busy + 6s wait) ──
-    let attempt = 0;
-    const MAX_ATTEMPTS = 3;
-    let result = null;
-
-    analyzeBtn.disabled = true;
-    outputSection.style.display = 'none';
-
-    while (attempt < MAX_ATTEMPTS) {
-      attempt++;
-      showStatus(`Analyzing… attempt ${attempt} of ${MAX_ATTEMPTS}`, 'loading');
-
-      try {
-        const response = await fetch(endpoint, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(body)
-        });
-
-        // 429 — Rate Limit / Server Busy
-        if (response.status === 429) {
-          showStatus('⚠️ Server Busy — retrying in 6 seconds…', 'busy');
-          await sleep(6000);
-          continue;
-        }
-
-        if (!response.ok) {
-          const errData = await response.json().catch(() => ({}));
-          const msg = errData?.error?.message || `HTTP ${response.status}`;
-          showStatus(`Error: ${msg}`, 'busy');
-          await sleep(2000);
-          break;
-        }
-
-        const data = await response.json();
-
-        // ── JSON parse: strip Markdown backticks ──
-        let raw = data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
-        raw = raw.replace(/^```json\s*/i, '').replace(/^```\s*/i, '').replace(/```$/i, '').trim();
-
-        result = raw;
-        break;
-
-      } catch (err) {
-        showStatus(`Network error: ${err.message}`, 'busy');
-        await sleep(2000);
-      }
-    }
-
-    hideStatus();
-    analyzeBtn.disabled = false;
-    checkReady();
-
-    if (result) {
-      renderOutput(result);
-    } else {
-      showStatus('Failed after 3 attempts. Check your API key or try again.', 'busy');
-      setTimeout(hideStatus, 5000);
-    }
-  }
-
-  function renderOutput(text) {
-    treatmentOut.textContent = text;
-
-    // Auto-detect keyword chips (updated to luxury labels)
-    const keywords = [
-      'Arri Alexa', '85mm', 'f/1.2', 'Volumetric Rim Light', 'High-Key Fashion',
-      'Portra 400', 'Editorial Vogue', 'Micro-Texture Detail', '4k Raw Log',
-      'Deep Obsidian Shadows', 'Master Prime', 'brushed gold', 'marble', 'cinematic'
-    ];
-    const found = keywords.filter(k => text.toLowerCase().includes(k.toLowerCase()));
-    metaChips.innerHTML = '';
-
-    const modelChip = document.createElement('span');
-    modelChip.className = 'chip cyan';
-    modelChip.textContent = 'gemini-2.0-flash';
-    metaChips.appendChild(modelChip);
-
-    found.forEach(k => {
-      const c = document.createElement('span');
-      c.className = 'chip';
-      c.textContent = k;
-      metaChips.appendChild(c);
-    });
-
+    treatmentOut.textContent = "Analyzing visual data...";
     outputSection.style.display = 'block';
-    outputSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+    const prompt = `Analyze this image as a Creative Director. Write a 100-word cinematic Director's Treatment. Use these modifiers: ${Array.from(activeTags).join(', ')}`;
+
+    try {
+      const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${key}`, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          contents: [{ parts: [{text: prompt}, {inline_data: {mime_type: currentMime, data: currentB64}}] }]
+        })
+      });
+      const data = await resp.json();
+      treatmentOut.textContent = data.candidates[0].content.parts[0].text;
+    } catch(e) {
+      treatmentOut.textContent = "Error: Check your API Key.";
+    }
   }
 
-  // ─── Button events ───────────────────────────────────────────
-  analyzeBtn.addEventListener('click', doAnalyze);
-
-  copyBtn.addEventListener('click', () => {
-    navigator.clipboard.writeText(treatmentOut.textContent).then(() => {
-      copyBtn.textContent = '✓ Copied!';
-      setTimeout(() => copyBtn.textContent = '⎘ Copy Treatment', 2000);
-    });
-  });
-
-  resetBtn.addEventListener('click', () => {
-    clearImage();
-    outputSection.style.display = 'none';
-  });
+  analyzeBtn.addEventListener('click', generate);
+  function copyText() {
+    navigator.clipboard.writeText(treatmentOut.textContent);
+    alert("Copied!");
+  }
 </script>
-
 </body>
 </html>
