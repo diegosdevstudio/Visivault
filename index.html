@@ -1,248 +1,204 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>VisiVault — DiegosDevStudio</title>
-    <style>
-        /* ─── ULTIMATE MIDNIGHT FOUNDATION ─── */
-        :root {
-            --bg-deep: #0B0F1A;
-            --bg-card: rgba(255, 255, 255, 0.03);
-            --accent-cyan: #4EE1F0;
-            --accent-blue: #3B82F6;
-            --text-main: #F8FAFC;
-            --text-dim: #94A3B8;
-            --border: rgba(78, 225, 240, 0.15);
-            --glass-stroke: rgba(255, 255, 255, 0.05);
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>VisiVault — DiegosDevStudio</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&display=swap');
 
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    :root {
+      --bg: #121826;
+      --cyan: #22D3EE;
+      --blue: #2563EB;
+      --text: #F8FAFC;
+      --muted: #94A3B8;
+      --glass-bg: rgba(255,255,255,0.04);
+      --glass-border: rgba(37,99,235,0.35);
+      --radius: 14px;
+    }
 
-        html, body {
-            background-color: var(--bg-deep) !important;
-            color: var(--text-main);
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            margin: 0; padding: 0;
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-        /* Ambient Glow Background */
-        body::before {
-            content: ''; position: fixed; inset: 0; z-index: -1;
-            background: 
-                radial-gradient(circle at 0% 0%, rgba(78, 225, 240, 0.08) 0%, transparent 50%),
-                radial-gradient(circle at 100% 100%, rgba(59, 130, 246, 0.1) 0%, transparent 50%);
-        }
+    /* CRITICAL: Force the dark background immediately to stop the white flash */
+    html, body {
+      background-color: #121826 !important;
+      color: var(--text);
+      font-family: 'DM Mono', monospace;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
 
-        /* ─── NAVIGATION ─── */
-        nav {
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 18px 24px; border-bottom: 1px solid var(--glass-stroke);
-            background: rgba(11, 15, 26, 0.8); backdrop-filter: blur(20px);
-            position: sticky; top: 0; z-index: 100;
-        }
+    /* Ambient Mesh Background */
+    body::before {
+      content: '';
+      position: fixed; inset: 0; z-index: 0;
+      background:
+        radial-gradient(ellipse 80% 60% at 10% 10%, rgba(34,211,238,0.07) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 80% at 90% 90%, rgba(37,99,235,0.10) 0%, transparent 60%);
+      pointer-events: none;
+    }
 
-        .logo-group { display: flex; align-items: center; gap: 10px; }
-        .logo-icon { width: 24px; height: 24px; border: 2px solid var(--accent-cyan); border-radius: 6px; position: relative; }
-        .logo-icon::after { content: '>'; position: absolute; left: 5px; top: -1px; font-size: 14px; color: var(--accent-cyan); font-weight: bold; }
-        
-        .brand-name { font-weight: 800; letter-spacing: 1px; }
-        .brand-name span { color: var(--accent-blue); }
-        .studio-tag { font-size: 10px; color: var(--text-dim); letter-spacing: 2px; text-transform: uppercase; }
+    /* ─── NAVIGATION ─── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      display: flex; align-items: center; gap: 14px;
+      padding: 14px 28px;
+      background: rgba(18,24,38,0.75);
+      backdrop-filter: blur(18px);
+      border-bottom: 1px solid var(--glass-border);
+    }
 
-        /* ─── MAIN UI ─── */
-        main { max-width: 600px; margin: 0 auto; padding: 30px 20px 100px; }
+    .logo-mark { width: 36px; height: 36px; position: relative; flex-shrink: 0; }
+    .logo-mark svg { width: 100%; height: 100%; }
 
-        .hero-section { margin-bottom: 40px; }
-        .hero-label { font-size: 11px; color: var(--accent-cyan); letter-spacing: 3px; margin-bottom: 15px; display: block; opacity: 0.8; }
-        .hero-title { font-size: 38px; line-height: 1.1; margin: 0 0 20px 0; font-weight: 900; }
-        .hero-title span { color: var(--accent-blue); display: block; }
-        .hero-desc { color: var(--text-dim); font-size: 15px; line-height: 1.6; }
+    .logo-text {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800; font-size: 1.15rem;
+      background: linear-gradient(90deg, var(--cyan), var(--blue));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: 0.03em;
+    }
+    .logo-sub { font-size: 0.65rem; color: var(--muted); margin-left: 2px; letter-spacing: 0.12em; text-transform: uppercase; }
+    nav .spacer { flex: 1; }
+    .nav-badge { font-size: 0.65rem; color: var(--cyan); border: 1px solid rgba(34,211,238,0.35); padding: 3px 10px; border-radius: 20px; }
 
-        .card {
-            background: var(--bg-card); border: 1px solid var(--border);
-            border-radius: 20px; padding: 24px; margin-bottom: 24px;
-            backdrop-filter: blur(10px);
-        }
+    /* ─── MAIN CONTENT ─── */
+    main { position: relative; z-index: 1; max-width: 900px; margin: 0 auto; padding: 48px 24px 80px; }
+    .hero-label { font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--cyan); margin-bottom: 12px; }
+    h1 { font-family: 'Syne', sans-serif; font-size: clamp(2rem, 5vw, 3.2rem); font-weight: 800; line-height: 1.1; margin-bottom: 16px; }
+    h1 span { background: linear-gradient(100deg, var(--cyan) 0%, var(--blue) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .hero-desc { color: var(--muted); font-size: 0.88rem; max-width: 520px; line-height: 1.7; margin-bottom: 40px; }
 
-        .section-header { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
-        .dot { width: 6px; height: 6px; background: var(--accent-cyan); border-radius: 50%; box-shadow: 0 0 10px var(--accent-cyan); }
-        .section-title { font-size: 12px; color: var(--accent-cyan); letter-spacing: 2px; font-weight: 700; text-transform: uppercase; }
+    .card {
+      background: var(--glass-bg); border: 1px solid var(--glass-border);
+      border-radius: var(--radius); backdrop-filter: blur(16px);
+      padding: 28px; margin-bottom: 24px; transition: border-color 0.3s;
+    }
+    .card-title { font-family: 'Syne', sans-serif; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; color: var(--cyan); margin-bottom: 18px; display: flex; align-items: center; gap: 8px; }
+    .card-title::before { content: ''; display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--cyan); box-shadow: 0 0 8px var(--cyan); }
 
-        input[type="password"] {
-            width: 100%; background: rgba(0,0,0,0.3); border: 1px solid var(--glass-stroke);
-            border-radius: 10px; padding: 14px; color: white; font-size: 14px;
-        }
+    .upload-zone { border: 2px dashed rgba(37,99,235,0.45); border-radius: var(--radius); padding: 40px 24px; text-align: center; cursor: pointer; position: relative; background: rgba(37,99,235,0.04); }
+    .upload-zone input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+    
+    .enhancer-grid { display: flex; flex-wrap: wrap; gap: 10px; }
+    .tag-btn { background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border); color: var(--muted); font-family: 'DM Mono', monospace; font-size: 0.72rem; padding: 7px 14px; border-radius: 20px; cursor: pointer; }
+    .tag-btn.active { border-color: var(--cyan); color: var(--bg); background: linear-gradient(100deg, var(--cyan), var(--blue)); }
+    .tag-category { font-size: 0.62rem; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(148,163,184,0.5); width: 100%; margin-top: 10px; }
 
-        .upload-zone {
-            border: 1px dashed var(--border); border-radius: 15px;
-            padding: 40px 20px; text-align: center; cursor: pointer;
-            transition: all 0.3s; background: rgba(255,255,255,0.01);
-        }
-        .upload-zone:hover { background: rgba(78, 225, 240, 0.05); }
-
-        /* ─── TAG SYSTEM ─── */
-        .tag-group { margin-bottom: 25px; }
-        .tag-label { font-size: 10px; color: var(--text-dim); margin-bottom: 12px; letter-spacing: 1px; }
-        .tag-container { display: flex; flex-wrap: wrap; gap: 8px; }
-        
-        .tag {
-            background: rgba(255,255,255,0.05); border: 1px solid var(--glass-stroke);
-            padding: 8px 16px; border-radius: 50px; font-size: 12px; color: var(--text-dim);
-            cursor: pointer; transition: 0.2s;
-        }
-        .tag.active { 
-            background: rgba(78, 225, 240, 0.1); border-color: var(--accent-cyan); color: var(--accent-cyan);
-            box-shadow: 0 0 15px rgba(78, 225, 240, 0.1);
-        }
-
-        /* ─── FOOTER BUTTON ─── */
-        .btn-forge {
-            width: 100%; padding: 20px; border-radius: 15px; border: none;
-            background: linear-gradient(135deg, var(--accent-blue), #1D4ED8);
-            color: white; font-weight: 800; font-size: 16px; letter-spacing: 1px;
-            cursor: pointer; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            display: flex; align-items: center; justify-content: center; gap: 10px;
-        }
-        .btn-forge:active { transform: scale(0.98); }
-
-        footer { text-align: center; padding: 40px; font-size: 10px; color: var(--text-dim); letter-spacing: 1px; }
-    </style>
+    .btn-primary {
+      background: linear-gradient(100deg, var(--cyan) 0%, var(--blue) 100%); color: #fff;
+      font-family: 'Syne', sans-serif; font-weight: 700; padding: 16px; border-radius: 8px; border: none; cursor: pointer; width: 100%; margin-top: 18px;
+    }
+    .treatment-box { background: rgba(0,0,0,0.25); border: 1px solid rgba(34,211,238,0.2); border-left: 3px solid var(--cyan); border-radius: var(--radius); padding: 24px; font-size: 0.88rem; line-height: 1.8; color: var(--text); }
+  </style>
 </head>
 <body>
 
 <nav>
-    <div class="logo-group">
-        <div class="logo-icon"></div>
-        <div>
-            <div class="brand-name">Visi<span>Vault</span></div>
-            <div class="studio-tag">DIEGOSDEVSTUDIO</div>
-        </div>
-    </div>
-    <div style="background: rgba(255,255,255,0.05); border: 1px solid var(--glass-stroke); padding: 6px 12px; border-radius: 20px; font-size: 10px; color: var(--accent-cyan);">gemini-2.0-flash</div>
+  <div class="logo-mark">
+    <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs><linearGradient id="lg" x1="0" y1="0" x2="36" y2="36" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#22D3EE"/><stop offset="100%" stop-color="#2563EB"/></linearGradient></defs>
+      <path d="M10 8 C7 8 5 10 5 13 L5 16 C5 17.5 4 18 3 18 C4 18 5 18.5 5 20 L5 23 C5 26 7 28 10 28" stroke="url(#lg)" stroke-width="2.8" stroke-linecap="round" fill="none"/>
+      <path d="M14 10 L14 26 C14 26 24 26 26 18 C28 10 14 10 14 10 Z" stroke="url(#lg)" stroke-width="2.5" stroke-linejoin="round" fill="none"/>
+      <path d="M17 15 L22 18 L17 21" stroke="url(#lg)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    </svg>
+  </div>
+  <div>
+    <div class="logo-text">VisiVault</div>
+    <div class="logo-sub">DiegosDevStudio</div>
+  </div>
+  <div class="spacer"></div>
+  <div class="nav-badge">gemini-2.0-flash</div>
 </nav>
 
 <main>
-    <section class="hero-section">
-        <span class="hero-label">// AI VISUAL INTELLIGENCE</span>
-        <h1 class="hero-title">Director's<span>Treatment Engine</span></h1>
-        <p class="hero-desc">Upload an image. The AI generates a dense, cinematic Director's Treatment — technical language for luxury branding, volumetric lighting, and premium visual storytelling.</p>
-    </section>
+  <p class="hero-label">// AI Visual Intelligence</p>
+  <h1>Director's <span>Treatment</span><br>Engine</h1>
+  <p class="hero-desc">Upload an image. The AI generates a dense, cinematic Director's Treatment — technical language for luxury branding and premium visual storytelling.</p>
 
+  <div class="card">
+    <div class="card-title">API Configuration</div>
+    <input type="password" id="api-key" placeholder="Paste Gemini Key..." style="width:100%; background:black; border:1px solid var(--glass-border); padding:12px; color:white; border-radius:8px;">
+  </div>
+
+  <div class="card">
+    <div class="card-title">Image Source</div>
+    <div class="upload-zone" id="drop-zone">
+      <input type="file" id="file-input" accept="image/*">
+      <p><strong>Drop a frame</strong> or click to browse</p>
+    </div>
+    <div id="preview-wrap" style="display:none; margin-top:20px;"><img id="preview-img" style="width:100%; border-radius:10px;"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Technical Enhancer</div>
+    <div class="enhancer-grid">
+      <span class="tag-category">// Vibe</span>
+      <button class="tag-btn" data-tag="Editorial Vogue">Editorial Vogue</button>
+      <button class="tag-btn" data-tag="4k Raw Log">4k Raw Log</button>
+      <span class="tag-category">// Lighting</span>
+      <button class="tag-btn" data-tag="Volumetric Rim Light">Volumetric Rim Light</button>
+      <button class="tag-btn" data-tag="High-Key Fashion">High-Key Fashion</button>
+      <span class="tag-category">// Tone</span>
+      <button class="tag-btn" data-tag="Deep Obsidian Shadows">Deep Obsidian Shadows</button>
+    </div>
+  </div>
+
+  <button class="btn-primary" id="analyze-btn">⚡ Generate Director's Treatment</button>
+
+  <div id="output-section" style="display:none; margin-top:32px;">
     <div class="card">
-        <div class="section-header"><div class="dot"></div><span class="section-title">API Configuration</span></div>
-        <p style="font-size: 11px; color: var(--text-dim); margin-bottom: 10px;">GEMINI API KEY</p>
-        <input type="password" id="api-key" placeholder="Paste key here...">
+      <div class="card-title">Director's Treatment</div>
+      <div class="treatment-box" id="treatment-output"></div>
     </div>
-
-    <div class="card">
-        <div class="section-header"><div class="dot"></div><span class="section-title">Image Source</span></div>
-        <div class="upload-zone" id="drop-zone">
-            <input type="file" id="file-input" accept="image/*" style="display:none;">
-            <p style="font-size: 14px; font-weight: 600;">Drop a frame <span style="color:var(--text-dim); font-weight:400;">or click to browse</span></p>
-        </div>
-        <div id="preview-wrap" style="display:none; margin-top:20px;">
-            <img id="preview-img" style="width:100%; border-radius:12px; border: 1px solid var(--border);">
-        </div>
-    </div>
-
-    <div class="card">
-        <div class="section-header"><div class="dot"></div><span class="section-title">Technical Enhancers</span></div>
-        
-        <div class="tag-group">
-            <div class="tag-label">// VIBE</div>
-            <div class="tag-container">
-                <button class="tag" data-val="Editorial Vogue">Editorial Vogue</button>
-                <button class="tag" data-val="4k Raw Log">4k Raw Log</button>
-            </div>
-        </div>
-
-        <div class="tag-group">
-            <div class="tag-label">// FILM STOCK</div>
-            <div class="tag-container">
-                <button class="tag" data-val="Kodak Portra 400">Portra 400</button>
-                <button class="tag" data-val="Fujifilm 400H">Fuji 400H</button>
-            </div>
-        </div>
-
-        <div class="tag-group">
-            <div class="tag-label">// LIGHTING</div>
-            <div class="tag-container">
-                <button class="tag" data-val="Volumetric Rim Light">Volumetric Rim Light</button>
-                <button class="tag" data-val="High-Key Fashion">High-Key Fashion</button>
-            </div>
-        </div>
-
-        <div class="tag-group">
-            <div class="tag-label">// CAMERA & LENS</div>
-            <div class="tag-container">
-                <button class="tag" data-val="Arri Alexa 65">Arri Alexa 65</button>
-                <button class="tag" data-val="85mm f/1.2">85mm f/1.2</button>
-            </div>
-        </div>
-    </div>
-
-    <button class="btn-forge" id="go-btn">
-        <span>⚡</span> Generate Director's Treatment
-    </button>
-
-    <div id="output" style="display:none; margin-top:30px;">
-        <div class="card">
-            <div style="font-size: 11px; color: var(--accent-cyan); margin-bottom: 15px;">// RESULT</div>
-            <div id="result-text" style="line-height: 1.8; font-size: 15px; color: #E2E8F0;"></div>
-        </div>
-    </div>
+  </div>
 </main>
 
-<footer>
-    © 2026 DiegosDevStudio • VisiVault • Powered by Gemini 2.0 Flash
-</footer>
+<footer>© 2026 DiegosDevStudio · VisiVault</footer>
 
 <script>
-    const fileIn = document.getElementById('file-input');
-    const dropZone = document.getElementById('drop-zone');
-    const goBtn = document.getElementById('go-btn');
-    let b64 = null, mime = null;
+  const fileIn = document.getElementById('file-input');
+  const analyzeBtn = document.getElementById('analyze-btn');
+  let b64 = null, mime = null;
 
-    dropZone.onclick = () => fileIn.click();
-    fileIn.onchange = (e) => {
-        const file = e.target.files[0];
-        mime = file.type;
-        const reader = new FileReader();
-        reader.onload = (re) => {
-            b64 = re.target.result.split(',')[1];
-            document.getElementById('preview-img').src = re.target.result;
-            document.getElementById('preview-wrap').style.display = 'block';
-        };
-        reader.readAsDataURL(file);
+  fileIn.onchange = (e) => {
+    const file = e.target.files[0];
+    mime = file.type;
+    const reader = new FileReader();
+    reader.onload = (re) => {
+      b64 = re.target.result.split(',')[1];
+      document.getElementById('preview-img').src = re.target.result;
+      document.getElementById('preview-wrap').style.display = 'block';
     };
+    reader.readAsDataURL(file);
+  };
 
-    document.querySelectorAll('.tag').forEach(b => {
-        b.onclick = () => b.classList.toggle('active');
-    });
+  document.querySelectorAll('.tag-btn').forEach(btn => {
+    btn.onclick = () => btn.classList.toggle('active');
+  });
 
-    goBtn.onclick = async () => {
-        const key = document.getElementById('api-key').value;
-        if(!key || !b64) return alert("Please configure API Key and upload an image.");
-        
-        const out = document.getElementById('result-text');
-        document.getElementById('output').style.display = 'block';
-        out.textContent = "Forging Identity...";
+  analyzeBtn.onclick = async () => {
+    const key = document.getElementById('api-key').value;
+    if(!key || !b64) return alert("Missing Key or Image");
+    
+    const out = document.getElementById('treatment-output');
+    document.getElementById('output-section').style.display = 'block';
+    out.textContent = "Forging Treatment...";
 
-        const activeTags = [...document.querySelectorAll('.tag.active')].map(b => b.dataset.val).join(', ');
-        const prompt = `Act as a luxury Creative Director. Write a dense 100-word Director's Treatment for this image using these technical specs: ${activeTags}. Focus on mood, lighting, and texture.`;
+    const tags = [...document.querySelectorAll('.tag-btn.active')].map(b => b.dataset.tag).join(', ');
+    const prompt = `Write a 100-word Director's Treatment for this image using these specs: ${tags}.`;
 
-        try {
-            const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${key}`, {
-                method: 'POST',
-                body: JSON.stringify({ contents: [{ parts: [{text: prompt}, {inline_data: {mime_type: mime, data: b64}}] }] })
-            });
-            const d = await r.json();
-            out.textContent = d.candidates[0].content.parts[0].text;
-        } catch(err) { out.textContent = "Connection Error. Verify your API Key."; }
-    };
+    try {
+      const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${key}`, {
+        method: 'POST',
+        body: JSON.stringify({ contents: [{ parts: [{text: prompt}, {inline_data: {mime_type: mime, data: b64}}] }] })
+      });
+      const d = await r.json();
+      out.textContent = d.candidates[0].content.parts[0].text;
+    } catch(err) { out.textContent = "Error: Check API Key."; }
+  };
 </script>
 </body>
 </html>
